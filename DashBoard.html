@@ -1,0 +1,431 @@
+
+ <html ng-app="MyAwesomeApp">
+<head>
+                <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+                <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+ <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+
+ <link rel="stylesheet" href="https://rawgit.com/jtblin/angular-chart.js/a0b1ce650d5dce9b7ccdd86843d83f27b0d7bc03/dist/angular-chart.css"> 
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+ <script type="text/javascript" src="https://rawgit.com/nnnick/Chart.js/8b840ce56be51b61dfc2d4e40e56304c880c541b/Chart.js"></script> 
+<script type="text/javascript" src="https://rawgit.com/jtblin/angular-chart.js/a0b1ce650d5dce9b7ccdd86843d83f27b0d7bc03/dist/angular-chart.js"></script> 
+
+  <script src="bower_components/ng-websocket/ng-websocket.js"></script>  
+<script src="app.js"></script>
+<style>
+  
+  /* page loader  CSS */
+
+
+#loader {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 1;
+  width: 100px;
+  height: 100px;
+  margin: -75px 0 0 -75px;
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 12px solid #3498db;
+  width: 80px;
+  height: 80px;
+  -webkit-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;
+}
+
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Add animation to "page content" */
+
+
+@-webkit-keyframes animatebottom {
+  from { bottom:-100px; opacity:0 } 
+  to { bottom:0px; opacity:1 }
+}
+
+@keyframes animatebottom { 
+  from{ bottom:-100px; opacity:0 } 
+  to{ bottom:0; opacity:1 }
+}
+
+
+
+#myDiv {
+  display: none;
+  text-align: center;
+}
+
+
+
+/* Registration Form CSS */
+
+  .register{
+    background: -webkit-linear-gradient(left, #3931af, #00c6ff);
+    margin-top: 3%;
+    padding: 3%;
+}
+.register-left{
+    text-align: center;
+    color: #fff;
+    margin-top: 4%;
+}
+.register-left input{
+    border: none;
+    border-radius: 1.5rem;
+    padding: 2%;
+    width: 60%;
+    background: #f8f9fa;
+    font-weight: bold;
+    color: #383d41;
+    margin-top: 30%;
+    margin-bottom: 3%;
+    cursor: pointer;
+}
+.register-right{
+    background: #f8f9fa;
+    border-top-left-radius: 10% 50%;
+    border-bottom-left-radius: 10% 50%;
+}
+.register-left img{
+    margin-top: 15%;
+    margin-bottom: 5%;
+    width: 25%;
+    -webkit-animation: mover 2s infinite  alternate;
+    animation: mover 1s infinite  alternate;
+}
+@-webkit-keyframes mover {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-20px); }
+}
+@keyframes mover {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-20px); }
+}
+.register-left p{
+    font-weight: lighter;
+    padding: 12%;
+    margin-top: -9%;
+}
+.register .register-form{
+    padding: 10%;
+    margin-top: 3%;
+}
+.btnRegister{
+    float: right;
+    
+    border: none;
+    border-radius: 1.5rem;
+    padding: 2%;
+    background: #0062cc;
+    color: #fff;
+    font-weight: 600;
+    width: 20%;
+    cursor: pointer;
+}
+.register .nav-tabs{
+    margin-top: 3%;
+    border: none;
+    background: #0062cc;
+    border-radius: 1.5rem;
+    width: 28%;
+    float: right;
+}
+.register .nav-tabs .nav-link{
+    padding: 2%;
+    height: 34px;
+    font-weight: 600;
+    color: #fff;
+    border-top-right-radius: 1.5rem;
+    border-bottom-right-radius: 1.5rem;
+}
+.register .nav-tabs .nav-link:hover{
+    border: none;
+}
+.register .nav-tabs .nav-link.active{
+    width: 100px;
+    color: #0062cc;
+    border: 2px solid #0062cc;
+    border-top-left-radius: 1.5rem;
+    border-bottom-left-radius: 1.5rem;
+}
+.register-heading{
+    text-align: center;
+    margin-top: 8%;
+    margin-bottom: -15%;
+    color: #495057;
+}
+.modal p {
+    word-wrap: break-word;
+}
+</style>
+</head>
+
+<body ng-controller="cnt">
+
+    <!-- Page loader -->
+    <div id="loader" ng-if="putloader"> </div>
+  
+
+
+    
+
+    <nav class="navbar navbar-default">
+       <!-- Alert message -->
+        <div class="alert alert-success puLl-right" ng-show="alertModal" ondrop="drop_handler(event);" ondragover="dragover_handler(event)" ng-init="defaultTabIndex=1" style="width:35%;z-index: 1;" role="alert">
+            <button type="button" style="z-index: 9999999999;" class="close"  ng-click="alertModal=false"   aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <strong>Success!!</strong>{{alertDescription}}
+          </div>
+        <div class="container-fluid">
+         
+          <ul class="nav nav-tabs navbar-nav">
+              <li><a data-toggle="tab" ng-click="ActivelineGraph=false;imageStream=false;putloader = false" href="#RegistrationContainer">Registration Portal</a></li>
+            <li ><a data-toggle="tab" ng-click="VideoContainerMethod();ActivelineGraph=false;imageStream=false;putloader = false" href="#videoContainer" >Video Container</a></li>
+            <li><a data-toggle="tab" ng-click="ImageContainerMethod();ActivelineGraph=false;putLoader()" href="#ImageContainer"  >Image Container</a></li>
+            <li><a data-toggle="tab" ng-click="GraphContainerMethod();putLoader();imageStream=false" href="#GraphContainer" >Gaph Container</a></li>
+            <li><a data-toggle="tab" ng-click="LoggingContainerMethod();ActivelineGraph=false;imageStream=false;putLoader()" href="#LoggingContainer">Logging Container</a></li>
+            
+            
+          </ul>
+
+          
+
+      <div class="tab-content"   class="animate-bottom">
+
+
+
+        
+         
+            <!-- video Container tab div -->
+  
+     
+            <div class="tab-pane fade" id="videoContainer" style="height:95%;width: 100%;" >
+                              
+                    <button type="button" style="margin-top: 20%;margin-left: -10%"  class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Play Video</button>
+                    <div>
+                
+
+                        <!-- video Modal -->
+                        <div id="myModal" class="modal fade videoModal" tabindex="-1" role="dialog">
+                          <div class="modal-dialog">
+                        
+                            <!-- Modal content-->
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4 class="modal-title" >Video</h4>
+                              </div>
+                              <div class="modal-body">
+                                      <div class="row">  
+                                      <div  class="col-md-8">  
+                                        <video width="320" height="240" controls>
+                                                        <source src="https://vodafone-socialcore.s3.ap-south-1.amazonaws.com/test-video.mp4 " type="video/mp4">
+                                                       
+                                                       
+                                                      </video>
+                                                      </div>
+                                                      <div class="col-md-4">
+                                                              <h4>Video Info</h4>
+                                                              
+                                                              <p><b>Casualities:</b> {{DataValue[0]?DataValue[0]:"None"}}</p>
+                                                             
+                                                              <p><b>Feed status:</b>{{DataValue[1]}}</p>
+                                                             
+                                                              <p><b>Last active time:</b>{{DataValue[2]}}</p>
+                                                             
+                                                              <p><b>Link:</b>{{DataValue[3]}}</p>
+                                                              <p><b>Location:</b> Block:{{DataValue[4]}} Unit:{{DataValue[5]}}</p>
+                                                              <!-- <p><b>Block:</b>{{DataValue[4]}}</p>
+                                                              <p><b>Unit:</b>{{DataValue[5]}}</p> -->
+                                                              <p><b>Name:</b>{{DataValue[6]}}</p>
+
+                                                      </div>
+                                                </div>   
+                                                  
+                              </div>
+                             
+                            </div>
+                        
+                          </div>
+                        </div>
+                        
+       
+                      </div>
+
+              </div>
+          
+            <!-- Graph Container tab div -->
+
+              <div  class="tab-pane fade"  id="GraphContainer" style="height: 75%;width: 100%;">
+
+           
+                  
+                
+              <div style="height: 50%;width: 70%; margin-top: 10%" >   
+                 <canvas id="line" class="chart chart-line" data="data"
+                   labels="labels"  
+                  click="onClick" chart-colors="colours">
+                </canvas>
+    
+              </div>
+            
+         
+    
+          </div>
+
+              <!-- Image Container tab div -->
+          
+      <div class="tab-pane fade"  id="ImageContainer" style="height: 95%;width: 100%;"   >
+
+       
+        <div >  
+            <img src id="showImage" ng-show="putloader == false" style="margin-top:10%;height:50%;width: 40%;margin-left: -40%">
+          </div>
+         
+          
+
+      </div>
+           
+            <!-- Registration Container tab div -->
+
+            <div class="tab-pane fade in active" id="RegistrationContainer" style="height: 85%;width: 100%;" >
+
+
+                <div class="container register" style="margin-top: 5%;z-index: 0" >
+                    <div class="row">
+                        <div class="col-md-4 register-left">
+                           
+                            <h3>Welcome</h3>
+                         
+                          
+                        </div>
+                        <div class="col-md-8 register-right">
+                            
+                            
+                            <div >
+                                <div >
+                                  
+                                 
+                                    <div class="row register-form">
+                                      <form name="registration">
+                                        <div class="col-md-12">
+                                            <div class="form-group col-md-12 row">
+                                                <input required type="text" minlength="5" maxlength="10" name="username" style="width: 60%;" class="form-control" placeholder="User Name*" ng-model="Register.USERNAME" />
+                                                <p ng-show = "registration.submitted && registration.username.$invalid "><span class="glyphicon glyphicon-alert"></span> Must have minimum 5 characters and a maximum of 10 characters   </p>
+                                            </div>
+                                          
+                                            <div class="form-group col-md-12 row">
+                                                <input required type="text" style="width: 60%;" name="emailID" class="form-control" ng-model="Register.EMAILID" placeholder="Email-Id*"    ng-pattern="/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/" />
+                                                <p ng-show = "registration.submitted && registration.emailID.$invalid "><span class="glyphicon glyphicon-alert"></span> Enter valid Email-Id    </p>
+                                            </div>
+                                            <div class="form-group col-md-12 row">
+                                                <input required type="password" style="width: 60%;" name="password" class="form-control" ng-model="Register.PASSWORD"  placeholder="Password*"  ng-pattern="/^(?=.*[a-z].*[a-z])(?=.*[A-Z].*[A-Z])(?=.*[0-9].*[0-9].*[0-9])(?=.*[!@#\$%\^&\*].*[!@#\$%\^&\*()])(?=.{8,})/"  value="" />
+                                                <p ng-show = "registration.submitted && registration.password.$invalid "><span class="glyphicon glyphicon-alert"></span> Password must contain one lowercase, one uppercase, three digits and two special characters    </p>
+                                            </div>
+                                            <input type="submit" class="btnRegister" ng-click="sendRegistrationData(Register)" />
+                                           
+                                        </div>
+                                      </form>
+                                    </div>
+                                  
+                                </div>
+                               
+                            </div>
+                          
+                        </div>
+                      
+                    </div>
+          
+                </div>
+              
+               
+
+           </div>
+
+
+           <div  class="tab-pane fade"  id="LoggingContainer" style="height: 95%;width: 100%;">
+
+           
+                  
+
+
+              <div class = "row">
+                         
+                <table class="table table-striped pull-left" ng-show="putloader == false"  style="width: 50%; margin-left:1%">
+                  <thead>
+                    <tr>
+                      <th>Message</th>
+                      
+                     
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr ng-repeat=" x in messageList  track by $index">
+                      <td>{{x}}</td>
+                      
+                      
+                    </tr>
+                   
+                   
+                  </tbody>
+                </table>
+              </div>
+      
+            </div>
+
+           </div>
+
+
+           
+
+
+
+         
+        </div>
+      </nav>
+
+
+
+        
+     
+    
+
+
+     
+     
+       
+        
+
+
+
+
+
+
+
+     
+    
+
+
+     
+     
+       
+        
+
+
+
+
+
+
+
+
+</body>    
+</html>

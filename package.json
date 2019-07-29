@@ -1,0 +1,22 @@
+{
+  "name": "dashboard",
+  "version": "1.0.0",
+  "description": "dashboard",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pnk0011/Dashboard.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pnk0011/Dashboard/issues"
+  },
+  "homepage": "https://github.com/pnk0011/Dashboard#readme",
+  "dependencies": {
+    "bower": "^1.8.8"
+  }
+}
