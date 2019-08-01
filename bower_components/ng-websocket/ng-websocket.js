@@ -119,16 +119,27 @@
         };
 
         me.$$init = function (cfg) {
-            me.$$ws = cfg.mock ? new $$mockWebsocket(cfg.mock, $http) : new WebSocket(cfg.url, cfg.protocols);
+
+            if (cfg.mock) {
+                me.$$ws = new $$mockWebsocket(cfg.mock, $http);
+            }
+            else if (cfg.protocols) {
+                me.$$ws = new WebSocket(cfg.url, cfg.protocols);
+            }
+            else {
+                me.$$ws = new WebSocket(cfg.url);
+            }
 
             me.$$ws.onmessage = function (message) {
                 try {
-                    var decoded = JSON.parse(message.data);
-                    me.$$fireEvent(decoded.event, decoded.data);
+                             
+              // var showitbaby=     JSON.stringify(message);
+                    var decoded = message.data;
+                  //  me.$$fireEvent(decoded.event, decoded.data);
                     me.$$fireEvent('$message', decoded);
                 }
                 catch (err) {
-                    me.$$fireEvent('$message', message.data);
+                    me.$$fireEvent('$message', decoded);
                 }
             };
 
@@ -173,13 +184,7 @@
         me.$CLOSING = 2;
         me.$CLOSED = 3;
 
-        // TODO: it doesn't refresh the view (maybe $apply on something?)
-        /*me.$bind = function (event, scope, model) {
-         me.$on(event, function (message) {
-         model = message;
-         scope.$apply();
-         });
-         };*/
+      
 
         me.$on = function () {
             var handlers = [];
@@ -210,11 +215,11 @@
             else if (me.$$config.enqueue) me.$$queue.push(message);
         };
 
-        me.$emit = function (event, data) {
-            if (typeof event !== 'string') throw new Error('$emit needs two parameter: a String and a Object or a String');
+        me.$emit = function ( data) {
+            //if (typeof event !== 'string') throw new Error('$emit needs two parameter: a String and a Object or a String');
 
             var message = {
-                event: event,
+              //  event: event,
                 data: data
             };
 
@@ -314,23 +319,27 @@
                 var message = messageQueue.shift(),
                     msgObj = JSON.parse(message);
 
-                switch (msgObj.event) {
-                    case '$close':
-                        me.close();
-                        break;
-                    default:
-                        // Check for a custom response
-                        if (typeof fixtures[msgObj.event] !== 'undefined') {
+                 switch (msgObj.event) {
+                     case '$close':
+                         me.close();
+                       break;
+                     default:
+                       // Check for a custom response
+                         if (typeof fixtures[msgObj.event] !== 'undefined') {
                             msgObj.data = fixtures[msgObj.event].data || msgObj.data;
-                            msgObj.event = fixtures[msgObj.event].event || msgObj.event;
+                             msgObj.event = fixtures[msgObj.event].event || msgObj.event;
                         }
 
-                        message = JSON.stringify(msgObj);
+                       message = JSON.stringify(msgObj);
 
-                        me.onmessage({
-                            data: message
-                        });
-                }
+                      me.onmessage({
+                             data: message
+                         });
+                 }
+
+                me.onmessage({
+                    data: message
+                });
             }
         }, messageInterval);
 
