@@ -328,7 +328,7 @@
                                                 <p ng-show = "registration.submitted && registration.emailID.$invalid "><span class="glyphicon glyphicon-alert"></span> Enter valid Email-Id    </p>
                                             </div>
                                             <div class="form-group col-md-12 row">
-                                                <input required type="password" style="width: 60%;" name="password" class="form-control" ng-model="Register.PASSWORD"  placeholder="Password*"  ng-pattern="/^(?=.*[a-z].*[a-z])(?=.*[A-Z].*[A-Z])(?=.*[0-9].*[0-9].*[0-9])(?=.*[!@#\$%\^&\*].*[!@#\$%\^&\*()])(?=.{8,})/"  value="" />
+                                                <input required type="password" style="width: 60%;" name="password" class="form-control" ng-model="Register.PASSWORD"  placeholder="Password*"  ng-pattern="/^(?=.*[a-z])(?=.*[A-Z].)(?=.*[0-9].*[0-9].*[0-9])(?=.*[!@#\$%\^&\*].*[!@#\$%\^&\*()])(?=.{7,})/"  value="" />
                                                 <p ng-show = "registration.submitted && registration.password.$invalid "><span class="glyphicon glyphicon-alert"></span> Password must contain one lowercase, one uppercase, three digits and two special characters    </p>
                                             </div>
                                             <input type="submit" class="btnRegister" ng-click="sendRegistrationData(Register)" />
